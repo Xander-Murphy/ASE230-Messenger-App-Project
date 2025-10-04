@@ -21,7 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-dark">
-
+  <header class="text-center text-light">
+      <h1>Sign Up Page</h1>
+  </header>
+    <nav class="text-center">
+    <a class="btn btn-primary" href="index.php" role="button">Index</a>
+    <a class="btn btn-primary" href="chat.php" role="button">Chat</a>
+  </nav>
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6">
