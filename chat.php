@@ -4,7 +4,7 @@ $filePath = 'messages.json';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
   $messages = [
     "sender" => "Genjo",
-    "content" => strip_tags($_POST['message']),
+    "content" => trim($_POST['message']),
     "timestamp" => date("Y-m-d H:i:s")
   ];
 
@@ -64,12 +64,12 @@ if (file_exists($filePath)) {
         <ul id="chatMessages" class="mb-3 mt-3 flex-grow-1 overflow-auto">
           <?php if (!empty($messages)): ?>
             <?php foreach ($messages as $msg): ?>
-              <li class="list-group-item text-start bg-dark text-light">
+              <li class="list-group-item text-start bg-dark text-light text-break pe-4">
                 <strong style="font-size: 1.1em;"><?= htmlspecialchars($msg['sender']); ?></strong>
                 <span class="text-tertiary" style="font-size: 0.7em;">
                   <?= date("g:i A", strtotime($msg['timestamp'])); ?>
                 </span>
-                <br><?= htmlspecialchars($msg['content']); ?>
+                <br><?= htmlspecialchars($msg['content'], ENT_QUOTES, 'UTF-8'); ?>
               </li>
             <?php endforeach; ?>
           <?php endif; ?>
@@ -78,15 +78,28 @@ if (file_exists($filePath)) {
         <!-- This controls the text box and send button -->
 
         <form method="POST" class="input-group mt-auto">
-          <input type="text" name="message" class="form-control" placeholder="Type your message..." required>
+          <input type="text" name="message" autofocus class="form-control" placeholder="Type your message..." required>
           <button class="btn btn-primary" type="submit">Send</button>
         </form>
 
       </section>
     </div>
   </main>
+<script>
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("chatScroll", document.getElementById("chatMessages").scrollHeight);
+  });
+  window.addEventListener("load", () => {
+    const chatBox = document.getElementById("chatMessages");
+    const lastScroll = localStorage.getItem("chatScroll");
+    if (lastScroll) {
+      chatBox.scrollTop = lastScroll;
+    } else {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  });
+</script>
   <script>
-    
     /*
     const input = document.getElementById('chatInput');
     const button = document.getElementById('sendBtn');
@@ -129,6 +142,7 @@ if (file_exists($filePath)) {
         button.click();
       }
     });
+    */
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
