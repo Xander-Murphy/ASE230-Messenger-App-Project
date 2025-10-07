@@ -4,7 +4,7 @@ $filePath = 'messages.json';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
   $messages = [
     "sender" => "Genjo",
-    "content" => strip_tags($_POST['message']),
+    "content" => trim($_POST['message']),
     "timestamp" => date("Y-m-d H:i:s")
   ];
 
@@ -69,7 +69,7 @@ if (file_exists($filePath)) {
                 <span class="text-tertiary" style="font-size: 0.7em;">
                   <?= date("g:i A", strtotime($msg['timestamp'])); ?>
                 </span>
-                <br><?= htmlspecialchars($msg['content']); ?>
+                <br><?= htmlspecialchars($msg['content'], ENT_QUOTES, 'UTF-8'); ?>
               </li>
             <?php endforeach; ?>
           <?php endif; ?>
