@@ -1,3 +1,38 @@
+<?php
+date_default_timezone_set('America/New_York');
+$filePath = 'messages.json';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
+  $messages = [
+    "sender" => "Genjo",
+    "content" => strip_tags($_POST['message']),
+    "timestamp" => date("Y-m-d H:i:s")
+  ];
+
+  if (file_exists($filePath)) {
+    $jsonData = file_get_contents($filePath);
+    $dataArray = json_decode($jsonData, true);
+    if (!is_array($dataArray)) {
+      $dataArray = [];
+    }
+  }
+  else {
+    $dataArray = [];
+  }
+
+    $dataArray[] = $messages;
+    file_put_contents($filePath, json_encode($dataArray, JSON_PRETTY_PRINT));
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+$messages = [];
+if (file_exists($filePath)) {
+  $jsonData = file_get_contents($filePath);
+  $messages = json_decode($jsonData, true);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,20 +61,33 @@
       <!-- Chat Section -->
       <section class="col-10 d-flex flex-column" style="height: calc(100vh - 10px);">
 
-        <ul id="chatMessages" class="list-group mb-3 mt-3 flex-grow-1 overflow-auto">
-        <!-- Chat messages will appear here -->
+        <ul id="chatMessages" class="mb-3 mt-3 flex-grow-1 overflow-auto">
+          <?php if (!empty($messages)): ?>
+            <?php foreach ($messages as $msg): ?>
+              <li class="list-group-item text-start bg-dark text-light">
+                <strong style="font-size: 1.1em;"><?= htmlspecialchars($msg['sender']); ?></strong>
+                <span class="text-tertiary" style="font-size: 0.7em;">
+                  <?= date("g:i A", strtotime($msg['timestamp'])); ?>
+                </span>
+                <br><?= htmlspecialchars($msg['content']); ?>
+              </li>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </ul>
 
         <!-- This controls the text box and send button -->
-        <div class="input-group mt-auto">
-          <input type="text" class="form-control" placeholder="Type your message..." id="chatInput">
-          <button class="btn btn-primary" type="button" id="sendBtn">Send</button>
-        </div>
+
+        <form method="POST" class="input-group mt-auto">
+          <input type="text" name="message" class="form-control" placeholder="Type your message..." required>
+          <button class="btn btn-primary" type="submit">Send</button>
+        </form>
 
       </section>
     </div>
   </main>
   <script>
+    
+    /*
     const input = document.getElementById('chatInput');
     const button = document.getElementById('sendBtn');
     const chatMessages = document.getElementById('chatMessages');
