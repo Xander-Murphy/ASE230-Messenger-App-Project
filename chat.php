@@ -1,9 +1,10 @@
 <?php
 date_default_timezone_set('America/New_York');
 $filePath = 'messages.json';
+$sender = isset($_POST['sender']) ? trim($_POST['sender']) : "Unknown";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
   $messages = [
-    "sender" => "Genjo",
+    "sender" => $sender,
     "content" => trim($_POST['message']),
     "timestamp" => date("Y-m-d H:i:s")
   ];
@@ -50,6 +51,8 @@ if (file_exists($filePath)) {
         <nav>
           <a class="btn btn-primary" href="index.php" role="button">Index</a>
           <a class="btn btn-primary" href="chat.php" role="button">Chat</a>
+          <a class="btn btn-primary" href="chat.php" role="button" onclick="signOut()">Sign out</a>
+
         </nav>
         <ul class="list-unstyled">
           <li>placeholder1</li>
@@ -77,7 +80,8 @@ if (file_exists($filePath)) {
 
         <!-- This controls the text box and send button -->
 
-        <form method="POST" class="input-group mt-auto">
+        <form method="POST" class="input-group mt-auto" id="chatForm">
+          <input type="hidden" name="sender" id="senderInput">
           <input type="text" name="message" autofocus class="form-control" placeholder="Type your message..." required>
           <button class="btn btn-primary" type="submit">Send</button>
         </form>
@@ -85,6 +89,25 @@ if (file_exists($filePath)) {
       </section>
     </div>
   </main>
+<script>
+
+  window.onload = function() {
+    if (!localStorage.getItem("username")) {
+        // Alert user
+          alert("You need to log in first!");
+          window.location.href = "login.php";
+    }
+}
+  //sign out function
+  function signOut() {
+    localStorage.removeItem("username");
+    window.location.href = 'index.php'
+  }
+
+  //pulls username from localStorage and appends to to a hidden field in the chat submit form
+  document.getElementById('chatForm').addEventListener('submit', function() {
+  document.getElementById('senderInput').value = localStorage.getItem('username');});
+</script>
 <script>
   window.addEventListener("beforeunload", () => {
     localStorage.setItem("chatScroll", document.getElementById("chatMessages").scrollHeight);
@@ -144,7 +167,9 @@ if (file_exists($filePath)) {
     });
     */
   </script>
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </script>
 </body>
 </html>
