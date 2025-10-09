@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             <!-- Redirect User to login -->
             <div id="emailHelp" class="form-text">
-              Already have an account? <a href="login.html">Sign in here</a>
+              Already have an account? <a href="login.php">Sign in here</a>
             </div>
             <!-- Submit -->
             <div class="d-grid">
