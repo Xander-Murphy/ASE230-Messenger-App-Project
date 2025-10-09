@@ -13,6 +13,7 @@
   <nav>
     <a class="btn btn-primary" href="index.php" role="button">Index</a>
     <a class="btn btn-primary" href="chat.php" role="button">Chat</a>
+    
   </nav>
   <main>
     <p>
@@ -20,6 +21,7 @@
     </p>
     <!-- Main content goes here -->
     <a class="btn btn-primary" href="signup.php" role="button">Link to Signup</a>
+    <a class="btn btn-primary" href="login.php" role="button">Link to Login</a>
   </main>
   <footer class="bg-dark text-white text-center py-3">
     <p>&copy; 230 Messenger</p>
