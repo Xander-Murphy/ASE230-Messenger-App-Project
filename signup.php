@@ -23,7 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   ];
 
   if (file_put_contents($filepath, json_encode($users, JSON_PRETTY_PRINT))) {
-    echo "<p style='color:green; text-align:center;'>Sign up successful!</p>";
+    header("Location: login.php");
+    exit();
   }
   else {
     echo "<p style='color:red; text-align:center;'>Error saving user data.</p>";
