@@ -1,36 +1,46 @@
 <?php
-$filepath = 'users.json';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $username = trim($_POST['username']);
-  $email    = trim($_POST['email']);
-  $password = trim($_POST['password']);
+  $password = $_POST['password'];
 
-  if (!empty($username) && !empty($password)) {
-    $jsonData = $jsonData = file_get_contents($filepath);
-    $users = json_decode($jsonData, true);
-    if (!is_array($users)) {
-      $users = [];
+  $usersFile = 'users.json';
+  if (!file_exists($usersFile)) {
+    die('User data file not found.');
+  }
+
+  $users = json_decode(file_get_contents($usersFile), true);
+  if ($users === null) {
+    die('Error reading user data.');
+  }
+
+  // Search for user
+  $foundUser = null;
+  foreach ($users as $user) {
+    if ($user['username'] === $username) {
+      $foundUser = $user;
+      break;
     }
   }
-  else {
-    $users = [];
+
+  if ($foundUser) {
+    if ($password === $foundUser['password']) {
+        echo "<p style='color:green; text-align:center;'>Login successful.</p>";
+        echo "<script>
+            localStorage.setItem('username', '" . htmlspecialchars($username, ENT_QUOTES) . "');
+            window.location.href = 'chat.php'; // Redirect to chat page
+        </script>";
+        exit;
+
+    } else {
+        echo "<p style='color:red; text-align:center;'>Incorrect password.</p>";
+    }
+  } else {
+    echo "<p style='color:red; text-align:center;'>User not found.</p>";
   }
-
-  $users[] = [
-    "username" => $username,
-    "email" => $email,
-    "password" => $password
-  ];
-
-  if (file_put_contents($filepath, json_encode($users, JSON_PRETTY_PRINT))) {
-    echo "<p style='color:green; text-align:center;'>Sign up successful!</p>";
-  }
-  else {
-    echo "<p style='color:red; text-align:center;'>Error saving user data.</p>";
-  }
-
-
 }
+
+
+
     
 ?>
 
