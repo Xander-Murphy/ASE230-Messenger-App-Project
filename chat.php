@@ -1,10 +1,11 @@
 <?php
 date_default_timezone_set('America/New_York');
 $filePath = 'messages.json';
+$sender = isset($_POST['sender']) ? trim($_POST['sender']) : "Unknown";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
   $messages = [
-    "sender" => "Genjo",
-    "content" => strip_tags($_POST['message']),
+    "sender" => $sender,
+    "content" => trim($_POST['message']),
     "timestamp" => date("Y-m-d H:i:s")
   ];
 
@@ -50,6 +51,8 @@ if (file_exists($filePath)) {
         <nav>
           <a class="btn btn-primary" href="index.php" role="button">Index</a>
           <a class="btn btn-primary" href="chat.php" role="button">Chat</a>
+          <a class="btn btn-primary" href="chat.php" role="button" onclick="signOut()">Sign out</a>
+
         </nav>
         <ul class="list-unstyled">
           <li>placeholder1</li>
@@ -64,12 +67,12 @@ if (file_exists($filePath)) {
         <ul id="chatMessages" class="mb-3 mt-3 flex-grow-1 overflow-auto">
           <?php if (!empty($messages)): ?>
             <?php foreach ($messages as $msg): ?>
-              <li class="list-group-item text-start bg-dark text-light">
+              <li class="list-group-item text-start bg-dark text-light text-break pe-4">
                 <strong style="font-size: 1.1em;"><?= htmlspecialchars($msg['sender']); ?></strong>
                 <span class="text-tertiary" style="font-size: 0.7em;">
                   <?= date("g:i A", strtotime($msg['timestamp'])); ?>
                 </span>
-                <br><?= htmlspecialchars($msg['content']); ?>
+                <br><?= htmlspecialchars($msg['content'], ENT_QUOTES, 'UTF-8'); ?>
               </li>
             <?php endforeach; ?>
           <?php endif; ?>
@@ -77,16 +80,49 @@ if (file_exists($filePath)) {
 
         <!-- This controls the text box and send button -->
 
-        <form method="POST" class="input-group mt-auto">
-          <input type="text" name="message" class="form-control" placeholder="Type your message..." required>
+        <form method="POST" class="input-group mt-auto" id="chatForm">
+          <input type="hidden" name="sender" id="senderInput">
+          <input type="text" name="message" autofocus class="form-control" placeholder="Type your message..." required>
           <button class="btn btn-primary" type="submit">Send</button>
         </form>
 
       </section>
     </div>
   </main>
+<script>
+
+  window.onload = function() {
+    if (!localStorage.getItem("username")) {
+        // Alert user
+          alert("You need to log in first!");
+          window.location.href = "login.php";
+    }
+}
+  //sign out function
+  function signOut() {
+    localStorage.removeItem("username");
+    window.location.href = 'index.php'
+  }
+
+  //pulls username from localStorage and appends to to a hidden field in the chat submit form
+  document.getElementById('chatForm').addEventListener('submit', function() {
+  document.getElementById('senderInput').value = localStorage.getItem('username');});
+</script>
+<script>
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("chatScroll", document.getElementById("chatMessages").scrollHeight);
+  });
+  window.addEventListener("load", () => {
+    const chatBox = document.getElementById("chatMessages");
+    const lastScroll = localStorage.getItem("chatScroll");
+    if (lastScroll) {
+      chatBox.scrollTop = lastScroll;
+    } else {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  });
+</script>
   <script>
-    
     /*
     const input = document.getElementById('chatInput');
     const button = document.getElementById('sendBtn');
@@ -129,8 +165,11 @@ if (file_exists($filePath)) {
         button.click();
       }
     });
+    */
   </script>
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </script>
 </body>
 </html>

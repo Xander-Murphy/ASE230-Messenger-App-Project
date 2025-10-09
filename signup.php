@@ -1,15 +1,37 @@
 <?php
-// signup.php
-
-// Handle form submission
+$filepath = 'users.json';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = htmlspecialchars($_POST['username']);
-    $email    = htmlspecialchars($_POST['email']);
-    $password = htmlspecialchars($_POST['password']); // normally you'd hash this
+  $username = trim($_POST['username']);
+  $email    = trim($_POST['email']);
+  $password = trim($_POST['password']);
 
-    // Example: display submitted values (in production you'd insert into a DB)
-    echo "<div class='alert alert-success'>Welcome, $username! Your account has been created.</div>";
+  if (!empty($username) && !empty($email) && !empty($password)) {
+    $jsonData = $jsonData = file_get_contents($filepath);
+    $users = json_decode($jsonData, true);
+    if (!is_array($users)) {
+      $users = [];
+    }
+  }
+  else {
+    $users = [];
+  }
+
+  $users[] = [
+    "username" => $username,
+    "email" => $email,
+    "password" => $password
+  ];
+
+  if (file_put_contents($filepath, json_encode($users, JSON_PRETTY_PRINT))) {
+    echo "<p style='color:green; text-align:center;'>Sign up successful!</p>";
+  }
+  else {
+    echo "<p style='color:red; text-align:center;'>Error saving user data.</p>";
+  }
+
+
 }
+    
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <input type="text" class="form-control" id="username" name="username" required>
             </div>
             
+            
             <!-- Email -->
             <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
@@ -54,6 +77,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <input type="password" class="form-control" id="password" name="password" required>
             </div>
             
+            <!-- Redirect User to login -->
+            <div id="emailHelp" class="form-text">
+              Already have an account? <a href="login.html">Sign in here</a>
+            </div>
             <!-- Submit -->
             <div class="d-grid">
               <button type="submit" class="btn btn-primary">Sign Up</button>
