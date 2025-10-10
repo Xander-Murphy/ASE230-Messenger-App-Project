@@ -13,7 +13,7 @@
   <nav>
     <a class="btn btn-primary" href="index.php" role="button">Index</a>
     <a class="btn btn-primary" href="chat.php" role="button">Chat</a>
-    
+    <a class="btn btn-primary" href="admin.php" role="button">Admin Page</a>
   </nav>
   <main>
     <p>
