@@ -1,8 +1,22 @@
 [
-
     {
         "username": "admin",
         "email": "admin@mail.com",
+        "password": "123"
+    },
+    {
+        "username": "Xander",
+        "email": "asdf@mail.com",
+        "password": "123"
+    },
+    {
+        "username": "Jack",
+        "email": "jack@mail.com",
+        "password": "123"
+    },
+    {
+        "username": "Jarred",
+        "email": "jarred@mail.com",
         "password": "123"
     }
 ]
