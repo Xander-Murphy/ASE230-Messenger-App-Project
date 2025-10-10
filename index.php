@@ -35,7 +35,10 @@ $developers = [
         <h4><?php echo $siteName; ?></h4>
         <nav class="mb-3">
           <a class="btn btn-primary w-100 mb-2" href="chat.php" role="button">Chat</a>
-          <a class="btn btn-primary w-100" href="signup.php" role="button">Sign Up</a>
+          <a class="btn btn-primary w-100 mb-2" href="signup.php" role="button">Sign Up</a>
+          <a class="btn btn-primary w-100 mb-2" href="login.php" role="button">Login</a>
+          <a class="btn btn-primary w-100 mb-2" href="admin.php" role="button">Admin Panel</a>
+          <a class="btn btn-primary w-100 mb-2" href="index.php" role="button" onclick="signOut()">Sign Out</a>
         </nav>
         <p class="text-light small">
           <?php echo $greeting; ?>!<br>
@@ -106,4 +109,10 @@ $developers = [
     </div>
   </main>
 </body>
+<script>
+  function signOut() {
+    localStorage.removeItem("username");
+    window.location.href = 'index.php'
+  }
+</script>
 </html>
